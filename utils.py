@@ -3,6 +3,14 @@ import matplotlib
 import pandas as pd
 from networkx.algorithms import approximation
 from pyvis.network import Network
+from os.path import exists
+
+def load_graph(file_name):
+    if exists(file_name):
+        return nx.read_gpickle(file_name)
+    else:
+        print("Download from dropbox link in repo")
+        return 
 
 def most_popular_nodes(G, num_nodes = 1):
     """
