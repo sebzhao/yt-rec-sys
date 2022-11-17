@@ -227,7 +227,7 @@ def jittered_scatterplot(x, y, jitter_std, alpha, s, label=None):
         x: x values to plot, must be same shape as y
         y: y values to plot, must be same shape as x
         jitter_std: standard deviation of the jitter 
-        alpha: opacity of the histplot
+        alpha: opacity of the scatterplot
         s: size of dots
         label: label of graph if multiple scatterplots/for legend
     Returns
@@ -236,3 +236,18 @@ def jittered_scatterplot(x, y, jitter_std, alpha, s, label=None):
     def jitter(values):
         return values + np.random.normal(0, jitter_std,values.shape)
     sns.scatterplot(x=jitter(x), y=jitter(y), alpha=alpha, s= s, label=label)
+
+# def scatterplot(G, attribute1, attribute2, alpha, s, label=None):
+#     """
+#     Graphs a sns scatterplot of attribute from G.
+
+#     Arguments
+#         G: networkx graph
+#         attribute: name of the node attribute in `G`
+#         alpha: opacity of the histplot
+#         label: label of graph if multiple histplots/for legend
+#     Returns
+#         None, graphs attribute from G
+#     """
+#     res = get_node_attributes(G, attribute)
+#     sns.histplot(res, log_scale=log_scale, stat='density', alpha=alpha, label=label)
