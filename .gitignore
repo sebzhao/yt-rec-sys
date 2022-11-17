@@ -4,3 +4,4 @@ full_data/
 yt_rec_graph.pgsql
 channel_graph.gz
 graph.gz
+*.pyc
