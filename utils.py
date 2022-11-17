@@ -6,6 +6,7 @@ from pyvis.network import Network
 from os.path import exists
 import datetime
 import seaborn as sns
+import numpy as np
 
 def load_graph(file_name):
     """
@@ -172,5 +173,66 @@ def add_successor_time_diff(G, attribute, agg, name):
             G.nodes[node][name] = None
 
 def histplot(G, log_scale, attribute, alpha, label=None):
+    """
+    Graphs a sns histplot of attribute from G.
+
+    Arguments
+        G: networkx graph
+        attribute: name of the node attribute in `G`
+        alpha: opacity of the histplot
+        label: label of graph if multiple histplots/for legend
+    Returns
+        None, graphs attribute from G
+    """
     res = get_node_attributes(G, attribute)
     sns.histplot(res, log_scale=log_scale, stat='density', alpha=alpha, label=label)
+
+def create_channel_graph(video_df, recommendation_df):
+    """
+    Creates a collapsed channel graph 
+
+    Arguments
+        video_df: df of all videos
+        recommendation_df: df of all recommendations between videos
+    Returns 
+        Channel level multi directed edge graph
+    """
+    vid_to_channel = video_df[['id', 'channel_id']].rename(columns={'channel_id': 'from_channel_id'})
+    vid_to_channel2 = video_df[['id', 'channel_id']].rename(columns={'channel_id': 'to_channel_id'})
+    channel_to_channel = recommendation_df.merge(vid_to_channel, left_on='from_id', right_on='id').merge(vid_to_channel2, left_on='to_id', right_on='id')
+    channel_to_channel = channel_to_channel[['from_channel_id', 'to_channel_id']]
+    channel_to_channel
+    channel_G = nx.from_pandas_edgelist(df=channel_to_channel, source="from_channel_id", target="to_channel_id", create_using=nx.MultiDiGraph)
+    return channel_G
+
+def add_channel_self_recommendation_source():
+    """
+    FIXME:
+    Placeholder 
+    """
+    pass
+
+def add_channel_self_recommendation_target():
+    """
+    FIXME:
+    Placeholder 
+    """
+    pass
+
+def jittered_scatterplot(x, y, jitter_std, alpha, s, label=None):
+    """
+    Graphs x and y jittered with mean 0 and std jitter_std
+
+    Arguments
+        x: x values to plot, must be same shape as y
+        y: y values to plot, must be same shape as x
+        jitter_std: standard deviation of the jitter 
+        alpha: opacity of the histplot
+        s: size of dots
+        label: label of graph if multiple scatterplots/for legend
+    Returns
+        None, graphs jittered scatterplot
+    """
+    def jitter(values):
+        return values + np.random.normal(0, jitter_std,values.shape)
+    sns.scatterplot(x=jitter(x), y=jitter(y), alpha=alpha, s= s, label=label)
